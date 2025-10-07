@@ -246,6 +246,26 @@ void editProduct() {
     cout << "║          แก้ไขข้อมูลสินค้า             ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
+    // แสดงรายการสินค้าทั้งหมดก่อน
+    if (products.empty()) {
+        cout << "❌ ไม่มีสินค้าในระบบ\n";
+        pause();
+        return;
+    }
+    
+    cout << "รายการสินค้าทั้งหมด:\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    cout << left << setw(12) << "รหัส" << setw(25) << "ชื่อสินค้า" 
+         << setw(18) << "หมวดหมู่" << right << setw(12) << "ราคา" << setw(10) << "สต็อก" << "\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    
+    for (const auto& p : products) {
+        cout << left << setw(12) << p.id << setw(25) << p.name 
+             << setw(18) << p.category << right << setw(12) << fixed << setprecision(2) 
+             << p.price << setw(10) << p.stock << "\n";
+    }
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+    
     string id;
     cin.ignore();
     cout << "รหัสสินค้าที่ต้องการแก้ไข: ";
@@ -292,6 +312,26 @@ void deleteProduct() {
     cout << "║             ลบสินค้า                   ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
+    // แสดงรายการสินค้าทั้งหมดก่อน
+    if (products.empty()) {
+        cout << "❌ ไม่มีสินค้าในระบบ\n";
+        pause();
+        return;
+    }
+    
+    cout << "รายการสินค้าทั้งหมด:\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    cout << left << setw(12) << "รหัส" << setw(25) << "ชื่อสินค้า" 
+         << setw(18) << "หมวดหมู่" << right << setw(12) << "ราคา" << setw(10) << "สต็อก" << "\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    
+    for (const auto& p : products) {
+        cout << left << setw(12) << p.id << setw(25) << p.name 
+             << setw(18) << p.category << right << setw(12) << fixed << setprecision(2) 
+             << p.price << setw(10) << p.stock << "\n";
+    }
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+    
     string id;
     cin.ignore();
     cout << "รหัสสินค้าที่ต้องการลบ: ";
@@ -331,17 +371,17 @@ void searchProduct() {
     getline(cin, keyword);
     
     cout << "\nผลการค้นหา:\n";
-    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << left << setw(10) << "รหัส" << setw(20) << "ชื่อสินค้า" 
-         << setw(15) << "หมวดหมู่" << setw(10) << "ราคา" << "สต็อก\n";
-    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    cout << left << setw(12) << "รหัส" << setw(25) << "ชื่อสินค้า" 
+         << setw(18) << "หมวดหมู่" << right << setw(12) << "ราคา" << setw(10) << "สต็อก" << "\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     bool found = false;
     for (const auto& p : products) {
         if (p.id.find(keyword) != string::npos || p.name.find(keyword) != string::npos) {
-            cout << left << setw(10) << p.id << setw(20) << p.name 
-                 << setw(15) << p.category << setw(10) << fixed << setprecision(2) 
-                 << p.price << p.stock << "\n";
+            cout << left << setw(12) << p.id << setw(25) << p.name 
+                 << setw(18) << p.category << right << setw(12) << fixed << setprecision(2) 
+                 << p.price << setw(10) << p.stock << "\n";
             found = true;
         }
     }
@@ -365,15 +405,15 @@ void showAllProducts() {
         return;
     }
     
-    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << left << setw(10) << "รหัส" << setw(20) << "ชื่อสินค้า" 
-         << setw(15) << "หมวดหมู่" << setw(10) << "ราคา" << "สต็อก\n";
-    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    cout << left << setw(12) << "รหัส" << setw(25) << "ชื่อสินค้า" 
+         << setw(18) << "หมวดหมู่" << right << setw(12) << "ราคา" << setw(10) << "สต็อก" << "\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     for (const auto& p : products) {
-        cout << left << setw(10) << p.id << setw(20) << p.name 
-             << setw(15) << p.category << setw(10) << fixed << setprecision(2) 
-             << p.price << p.stock << "\n";
+        cout << left << setw(12) << p.id << setw(25) << p.name 
+             << setw(18) << p.category << right << setw(12) << fixed << setprecision(2) 
+             << p.price << setw(10) << p.stock << "\n";
     }
     
     pause();
@@ -386,6 +426,34 @@ void sellProduct() {
     cout << "╔════════════════════════════════════════╗\n";
     cout << "║             ขายสินค้า                  ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
+    
+    // แสดงรายการสินค้าที่มีสต็อกก่อน
+    cout << "รายการสินค้าที่พร้อมขาย:\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    cout << left << setw(12) << "รหัส" << setw(25) << "ชื่อสินค้า" 
+         << setw(18) << "หมวดหมู่" << right << setw(12) << "ราคา" << setw(10) << "สต็อก" << "\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    
+    bool hasStock = false;
+    for (const auto& p : products) {
+        if (p.stock > 0) {
+            cout << left << setw(12) << p.id << setw(25) << p.name 
+                 << setw(18) << p.category << right << setw(12) << fixed << setprecision(2) 
+                 << p.price << setw(10) << p.stock;
+            if (p.stock <= p.minStock) {
+                cout << " ⚠️";
+            }
+            cout << "\n";
+            hasStock = true;
+        }
+    }
+    
+    if (!hasStock) {
+        cout << "ไม่มีสินค้าที่พร้อมขาย\n";
+        pause();
+        return;
+    }
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
     
     string id;
     int quantity;
@@ -469,15 +537,15 @@ void reportStockRemaining() {
     cout << "║        รายงานสินค้าคงเหลือ            ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
-    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << left << setw(10) << "รหัส" << setw(20) << "ชื่อสินค้า" 
-         << setw(15) << "หมวดหมู่" << setw(10) << "ราคา" << "สต็อก\n";
-    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    cout << left << setw(12) << "รหัส" << setw(25) << "ชื่อสินค้า" 
+         << setw(18) << "หมวดหมู่" << right << setw(12) << "ราคา" << setw(10) << "สต็อก" << "\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     for (const auto& p : products) {
-        cout << left << setw(10) << p.id << setw(20) << p.name 
-             << setw(15) << p.category << setw(10) << fixed << setprecision(2) 
-             << p.price << p.stock;
+        cout << left << setw(12) << p.id << setw(25) << p.name 
+             << setw(18) << p.category << right << setw(12) << fixed << setprecision(2) 
+             << p.price << setw(10) << p.stock;
         
         if (p.stock <= p.minStock) {
             cout << " ⚠️ ";
@@ -494,17 +562,17 @@ void reportLowStock() {
     cout << "║        รายงานสินค้าใกล้หมด            ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
-    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << left << setw(10) << "รหัส" << setw(20) << "ชื่อสินค้า" 
-         << setw(15) << "หมวดหมู่" << setw(10) << "ราคา" << "สต็อก\n";
-    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    cout << left << setw(12) << "รหัส" << setw(25) << "ชื่อสินค้า" 
+         << setw(18) << "หมวดหมู่" << right << setw(12) << "ราคา" << setw(10) << "สต็อก" << "\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     bool found = false;
     for (const auto& p : products) {
         if (p.stock <= p.minStock) {
-            cout << left << setw(10) << p.id << setw(20) << p.name 
-                 << setw(15) << p.category << setw(10) << fixed << setprecision(2) 
-                 << p.price << p.stock << " ⚠️\n";
+            cout << left << setw(12) << p.id << setw(25) << p.name 
+                 << setw(18) << p.category << right << setw(12) << fixed << setprecision(2) 
+                 << p.price << setw(10) << p.stock << " ⚠️\n";
             found = true;
         }
     }
