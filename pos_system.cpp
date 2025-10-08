@@ -268,8 +268,14 @@ void editProduct() {
     
     string id;
     cin.ignore();
-    cout << "รหัสสินค้าที่ต้องการแก้ไข: ";
+    cout << "รหัสสินค้าที่ต้องการแก้ไข (พิมพ์ 0 เพื่อยกเลิก): ";
     getline(cin, id);
+    
+    if (id == "0" || id == "cancel") {
+        cout << "\n❌ ยกเลิกการแก้ไข\n";
+        pause();
+        return;
+    }
     
     for (auto& p : products) {
         if (p.id == id) {
