@@ -8,24 +8,24 @@
 
 using namespace std;
 
-// โครงสร้างข้อมูลสินค้า
+// Product Data Structure
 struct Product {
     string id;
     string name;
     string category;
     double price;
     int stock;
-    int minStock; // สต็อกขั้นต่ำสำหรับแจ้งเตือน
+    int minStock; // Minimum stock for alert
 };
 
-// โครงสร้างข้อมูลผู้ใช้
+// User Data Structure
 struct User {
     string username;
     string password;
-    string role; // Admin หรือ Cashier
+    string role; // Admin or Cashier
 };
 
-// โครงสร้างข้อมูลการขาย
+// Sale Data Structure
 struct Sale {
     string date;
     string time;
@@ -36,13 +36,13 @@ struct Sale {
     string cashier;
 };
 
-// ตัวแปร Global
+// Global Variables
 User currentUser;
 vector<Product> products;
 vector<Sale> sales;
 vector<User> users;
 
-// ===== ฟังก์ชันช่วยเหลือทั่วไป =====
+// ===== Helper Functions =====
 
 void clearScreen() {
     #ifdef _WIN32
@@ -53,7 +53,7 @@ void clearScreen() {
 }
 
 void pause() {
-    cout << "\n\nกด Enter เพื่อดำเนินการต่อ...";
+    cout << "\n\nPress Enter to continue...";
     cin.ignore();
     cin.get();
 }
@@ -74,7 +74,7 @@ string getCurrentTime() {
     return string(buffer);
 }
 
-// ===== ฟังก์ชันจัดการไฟล์ =====
+// ===== File Management Functions =====
 
 void loadUsers() {
     users.clear();
@@ -91,7 +91,7 @@ void loadUsers() {
         }
         file.close();
     } else {
-        // สร้างผู้ใช้เริ่มต้น
+        // Create default users
         User admin = {"admin", "admin123", "Admin"};
         User cashier = {"cashier", "cash123", "Cashier"};
         users.push_back(admin);
@@ -169,12 +169,12 @@ void saveSale(const Sale& sale) {
     file.close();
 }
 
-// ===== ระบบล็อกอิน =====
+// ===== Login System =====
 
 bool login() {
     clearScreen();
     cout << "╔════════════════════════════════════════╗\n";
-    cout << "║     ระบบจัดการร้านค้า POS SYSTEM      ║\n";
+    cout << "║        POS SYSTEM - MANAGEMENT         ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
     string username, password;
@@ -190,73 +190,73 @@ bool login() {
         }
     }
     
-    cout << "\n❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง!\n";
+    cout << "\n❌ Invalid username or password!\n";
     pause();
     return false;
 }
 
-// ===== ระบบจัดการสินค้า (Admin เท่านั้น) =====
+// ===== Product Management (Admin Only) =====
 
 void addProduct() {
     clearScreen();
     cout << "╔════════════════════════════════════════╗\n";
-    cout << "║          เพิ่มสินค้าใหม่               ║\n";
+    cout << "║            ADD NEW PRODUCT             ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
     Product p;
     cin.ignore();
     
-    cout << "รหัสสินค้า: ";
+    cout << "Product ID: ";
     getline(cin, p.id);
     
-    // ตรวจสอบรหัสสินค้าซ้ำ
+    // Check duplicate ID
     for (const auto& prod : products) {
         if (prod.id == p.id) {
-            cout << "\n❌ รหัสสินค้านี้มีอยู่แล้ว!\n";
+            cout << "\n❌ This product ID already exists!\n";
             pause();
             return;
         }
     }
     
-    cout << "ชื่อสินค้า: ";
+    cout << "Product Name: ";
     getline(cin, p.name);
     
-    cout << "หมวดหมู่: ";
+    cout << "Category: ";
     getline(cin, p.category);
     
-    cout << "ราคา: ";
+    cout << "Price: ";
     cin >> p.price;
     
-    cout << "จำนวนสต็อก: ";
+    cout << "Stock Quantity: ";
     cin >> p.stock;
     
-    cout << "สต็อกขั้นต่ำ (แจ้งเตือน): ";
+    cout << "Minimum Stock (Alert): ";
     cin >> p.minStock;
     
     products.push_back(p);
     saveProducts();
     
-    cout << "\n✓ เพิ่มสินค้าเรียบร้อยแล้ว!\n";
+    cout << "\n✓ Product added successfully!\n";
     pause();
 }
 
 void editProduct() {
     clearScreen();
     cout << "╔════════════════════════════════════════╗\n";
-    cout << "║          แก้ไขข้อมูลสินค้า             ║\n";
+    cout << "║            EDIT PRODUCT                ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
-    // แสดงรายการสินค้าทั้งหมดก่อน
+    // Show all products first
     if (products.empty()) {
-        cout << "❌ ไม่มีสินค้าในระบบ\n";
+        cout << "❌ No products in system\n";
         pause();
         return;
     }
     
-    cout << "รายการสินค้าทั้งหมด:\n";
+    cout << "All Products:\n";
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << left << setw(12) << "รหัส" << setw(25) << "ชื่อสินค้า" 
-         << setw(18) << "หมวดหมู่" << right << setw(12) << "ราคา" << setw(10) << "สต็อก" << "\n";
+    cout << left << setw(12) << "ID" << setw(25) << "Product Name" 
+         << setw(18) << "Category" << right << setw(12) << "Price" << setw(10) << "Stock" << "\n";
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     for (const auto& p : products) {
@@ -268,67 +268,67 @@ void editProduct() {
     
     string id;
     cin.ignore();
-    cout << "รหัสสินค้าที่ต้องการแก้ไข (พิมพ์ 0 เพื่อยกเลิก): ";
+    cout << "Product ID to edit (type 0 to cancel): ";
     getline(cin, id);
     
     if (id == "0" || id == "cancel") {
-        cout << "\n❌ ยกเลิกการแก้ไข\n";
+        cout << "\n❌ Edit cancelled\n";
         pause();
         return;
     }
     
     for (auto& p : products) {
         if (p.id == id) {
-            cout << "\nข้อมูลปัจจุบัน:\n";
-            cout << "ชื่อ: " << p.name << "\n";
-            cout << "หมวดหมู่: " << p.category << "\n";
-            cout << "ราคา: " << p.price << " บาท\n";
-            cout << "สต็อก: " << p.stock << "\n";
-            cout << "สต็อกขั้นต่ำ: " << p.minStock << "\n\n";
+            cout << "\nCurrent Information:\n";
+            cout << "Name: " << p.name << "\n";
+            cout << "Category: " << p.category << "\n";
+            cout << "Price: " << p.price << " $\n";
+            cout << "Stock: " << p.stock << "\n";
+            cout << "Min Stock: " << p.minStock << "\n\n";
             
-            cout << "ชื่อสินค้าใหม่: ";
+            cout << "New Product Name: ";
             getline(cin, p.name);
             
-            cout << "หมวดหมู่ใหม่: ";
+            cout << "New Category: ";
             getline(cin, p.category);
             
-            cout << "ราคาใหม่: ";
+            cout << "New Price: ";
             cin >> p.price;
             
-            cout << "จำนวนสต็อกใหม่: ";
+            cout << "New Stock Quantity: ";
             cin >> p.stock;
             
-            cout << "สต็อกขั้นต่ำใหม่: ";
+            cout << "New Min Stock: ";
             cin >> p.minStock;
             
             saveProducts();
-            cout << "\n✓ แก้ไขข้อมูลเรียบร้อยแล้ว!\n";
+            cout << "\n✓ Product updated successfully!\n";
             pause();
             return;
         }
     }
     
-    cout << "\n❌ ไม่พบรหัสสินค้านี้!\n";
+    cout << "\n❌ Product ID not found!\n";
     pause();
 }
 
 void deleteProduct() {
     clearScreen();
     cout << "╔════════════════════════════════════════╗\n";
-    cout << "║             ลบสินค้า                   ║\n";
+    cout << "║           DELETE PRODUCT               ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
-    // แสดงรายการสินค้าทั้งหมดก่อน
+    // Show all products first
     if (products.empty()) {
-        cout << "❌ ไม่มีสินค้าในระบบ\n";
+        cout << "❌ No products in system\n";
         pause();
         return;
     }
     
-    cout << "รายการสินค้าทั้งหมด:\n";
+    cout << "All Products:\n";
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << left << setw(12) << "รหัส" << setw(25) << "ชื่อสินค้า" 
-         << setw(18) << "หมวดหมู่" << right << setw(12) << "ราคา" << setw(10) << "สต็อก" << "\n";
+    cout << left << setw(12) << "ID" << setw(25) << "Product Name" 
+         << setw(18) << "Category" << right << setw(12) << "Price" << setw(10) << "Stock" << "\n";
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     for (const auto& p : products) {
@@ -340,46 +340,56 @@ void deleteProduct() {
     
     string id;
     cin.ignore();
-    cout << "รหัสสินค้าที่ต้องการลบ: ";
+    cout << "Product ID to delete (type 0 to cancel): ";
     getline(cin, id);
+    
+    if (id == "0" || id == "cancel") {
+        cout << "\n❌ Delete cancelled\n";
+        pause();
+        return;
+    }
     
     for (size_t i = 0; i < products.size(); i++) {
         if (products[i].id == id) {
-            cout << "\nจะลบสินค้า: " << products[i].name << " ใช่หรือไม่? (y/n): ";
+            cout << "\nDelete product: " << products[i].name << "? (y/n): ";
             char confirm;
             cin >> confirm;
             
             if (confirm == 'y' || confirm == 'Y') {
                 products.erase(products.begin() + i);
                 saveProducts();
-                cout << "\n✓ ลบสินค้าเรียบร้อยแล้ว!\n";
+                cout << "\n✓ Product deleted successfully!\n";
             } else {
-                cout << "\n❌ ยกเลิกการลบ\n";
+                cout << "\n❌ Delete cancelled\n";
             }
             pause();
             return;
         }
     }
     
-    cout << "\n❌ ไม่พบรหัสสินค้านี้!\n";
+    cout << "\n❌ Product ID not found!\n";
     pause();
 }
 
 void searchProduct() {
     clearScreen();
     cout << "╔════════════════════════════════════════╗\n";
-    cout << "║           ค้นหาสินค้า                  ║\n";
+    cout << "║          SEARCH PRODUCT                ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
     string keyword;
     cin.ignore();
-    cout << "ค้นหา (ชื่อหรือรหัสสินค้า): ";
+    cout << "Search (Name or ID, type 0 to cancel): ";
     getline(cin, keyword);
     
-    cout << "\nผลการค้นหา:\n";
+    if (keyword == "0" || keyword == "cancel") {
+        return;
+    }
+    
+    cout << "\nSearch Results:\n";
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << left << setw(12) << "รหัส" << setw(25) << "ชื่อสินค้า" 
-         << setw(18) << "หมวดหมู่" << right << setw(12) << "ราคา" << setw(10) << "สต็อก" << "\n";
+    cout << left << setw(12) << "ID" << setw(25) << "Product Name" 
+         << setw(18) << "Category" << right << setw(12) << "Price" << setw(10) << "Stock" << "\n";
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     bool found = false;
@@ -393,7 +403,7 @@ void searchProduct() {
     }
     
     if (!found) {
-        cout << "ไม่พบสินค้าที่ตรงกับคำค้นหา\n";
+        cout << "No products found matching search\n";
     }
     
     pause();
@@ -402,18 +412,18 @@ void searchProduct() {
 void showAllProducts() {
     clearScreen();
     cout << "╔════════════════════════════════════════╗\n";
-    cout << "║        รายการสินค้าทั้งหมด            ║\n";
+    cout << "║          ALL PRODUCTS                  ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
     if (products.empty()) {
-        cout << "ไม่มีสินค้าในระบบ\n";
+        cout << "No products in system\n";
         pause();
         return;
     }
     
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << left << setw(12) << "รหัส" << setw(25) << "ชื่อสินค้า" 
-         << setw(18) << "หมวดหมู่" << right << setw(12) << "ราคา" << setw(10) << "สต็อก" << "\n";
+    cout << left << setw(12) << "ID" << setw(25) << "Product Name" 
+         << setw(18) << "Category" << right << setw(12) << "Price" << setw(10) << "Stock" << "\n";
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     for (const auto& p : products) {
@@ -425,19 +435,19 @@ void showAllProducts() {
     pause();
 }
 
-// ===== ระบบขายสินค้า =====
+// ===== Sales System =====
 
 void sellProduct() {
     clearScreen();
     cout << "╔════════════════════════════════════════╗\n";
-    cout << "║             ขายสินค้า                  ║\n";
+    cout << "║            SELL PRODUCT                ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
-    // แสดงรายการสินค้าที่มีสต็อกก่อน
-    cout << "รายการสินค้าที่พร้อมขาย:\n";
+    // Show available products first
+    cout << "Available Products:\n";
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << left << setw(12) << "รหัส" << setw(25) << "ชื่อสินค้า" 
-         << setw(18) << "หมวดหมู่" << right << setw(12) << "ราคา" << setw(10) << "สต็อก" << "\n";
+    cout << left << setw(12) << "ID" << setw(25) << "Product Name" 
+         << setw(18) << "Category" << right << setw(12) << "Price" << setw(10) << "Stock" << "\n";
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     bool hasStock = false;
@@ -455,7 +465,7 @@ void sellProduct() {
     }
     
     if (!hasStock) {
-        cout << "ไม่มีสินค้าที่พร้อมขาย\n";
+        cout << "No products available for sale\n";
         pause();
         return;
     }
@@ -465,26 +475,32 @@ void sellProduct() {
     int quantity;
     
     cin.ignore();
-    cout << "รหัสสินค้า: ";
+    cout << "Product ID (type 0 to cancel): ";
     getline(cin, id);
+    
+    if (id == "0" || id == "cancel") {
+        cout << "\n❌ Sale cancelled\n";
+        pause();
+        return;
+    }
     
     for (auto& p : products) {
         if (p.id == id) {
-            cout << "\nสินค้า: " << p.name << "\n";
-            cout << "ราคา: " << fixed << setprecision(2) << p.price << " บาท\n";
-            cout << "สต็อกคงเหลือ: " << p.stock << "\n\n";
+            cout << "\nProduct: " << p.name << "\n";
+            cout << "Price: " << fixed << setprecision(2) << p.price << " $\n";
+            cout << "Stock Available: " << p.stock << "\n\n";
             
-            cout << "จำนวนที่ต้องการขาย: ";
+            cout << "Quantity to sell: ";
             cin >> quantity;
             
             if (quantity > p.stock) {
-                cout << "\n❌ สต็อกสินค้าไม่เพียงพอ! (คงเหลือ " << p.stock << " ชิ้น)\n";
+                cout << "\n❌ Insufficient stock! (Available: " << p.stock << " units)\n";
                 pause();
                 return;
             }
             
             if (quantity <= 0) {
-                cout << "\n❌ จำนวนไม่ถูกต้อง!\n";
+                cout << "\n❌ Invalid quantity!\n";
                 pause();
                 return;
             }
@@ -492,18 +508,18 @@ void sellProduct() {
             double total = p.price * quantity;
             
             cout << "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-            cout << "ยอดชำระทั้งหมด: " << fixed << setprecision(2) << total << " บาท\n";
+            cout << "Total Amount: " << fixed << setprecision(2) << total << " $\n";
             cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-            cout << "\nยืนยันการขาย? (y/n): ";
+            cout << "\nConfirm sale? (y/n): ";
             char confirm;
             cin >> confirm;
             
             if (confirm == 'y' || confirm == 'Y') {
-                // ลดสต็อก
+                // Reduce stock
                 p.stock -= quantity;
                 saveProducts();
                 
-                // บันทึกการขาย
+                // Record sale
                 Sale sale;
                 sale.date = getCurrentDate();
                 sale.time = getCurrentTime();
@@ -516,14 +532,14 @@ void sellProduct() {
                 saveSale(sale);
                 sales.push_back(sale);
                 
-                cout << "\n✓ ขายสินค้าเรียบร้อยแล้ว!\n";
-                cout << "สต็อกคงเหลือ: " << p.stock << " ชิ้น\n";
+                cout << "\n✓ Sale completed successfully!\n";
+                cout << "Remaining Stock: " << p.stock << " units\n";
                 
                 if (p.stock <= p.minStock) {
-                    cout << "\n⚠️  เตือน: สินค้าใกล้หมด!\n";
+                    cout << "\n⚠️  Warning: Low stock alert!\n";
                 }
             } else {
-                cout << "\n❌ ยกเลิกการขาย\n";
+                cout << "\n❌ Sale cancelled\n";
             }
             
             pause();
@@ -531,21 +547,21 @@ void sellProduct() {
         }
     }
     
-    cout << "\n❌ ไม่พบรหัสสินค้านี้!\n";
+    cout << "\n❌ Product ID not found!\n";
     pause();
 }
 
-// ===== ระบบรายงาน =====
+// ===== Report System =====
 
 void reportStockRemaining() {
     clearScreen();
     cout << "╔════════════════════════════════════════╗\n";
-    cout << "║        รายงานสินค้าคงเหลือ            ║\n";
+    cout << "║        STOCK REMAINING REPORT          ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << left << setw(12) << "รหัส" << setw(25) << "ชื่อสินค้า" 
-         << setw(18) << "หมวดหมู่" << right << setw(12) << "ราคา" << setw(10) << "สต็อก" << "\n";
+    cout << left << setw(12) << "ID" << setw(25) << "Product Name" 
+         << setw(18) << "Category" << right << setw(12) << "Price" << setw(10) << "Stock" << "\n";
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     for (const auto& p : products) {
@@ -565,12 +581,12 @@ void reportStockRemaining() {
 void reportLowStock() {
     clearScreen();
     cout << "╔════════════════════════════════════════╗\n";
-    cout << "║        รายงานสินค้าใกล้หมด            ║\n";
+    cout << "║          LOW STOCK REPORT              ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << left << setw(12) << "รหัส" << setw(25) << "ชื่อสินค้า" 
-         << setw(18) << "หมวดหมู่" << right << setw(12) << "ราคา" << setw(10) << "สต็อก" << "\n";
+    cout << left << setw(12) << "ID" << setw(25) << "Product Name" 
+         << setw(18) << "Category" << right << setw(12) << "Price" << setw(10) << "Stock" << "\n";
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     bool found = false;
@@ -584,7 +600,7 @@ void reportLowStock() {
     }
     
     if (!found) {
-        cout << "ไม่มีสินค้าที่ใกล้หมด\n";
+        cout << "No low stock products\n";
     }
     
     pause();
@@ -593,17 +609,21 @@ void reportLowStock() {
 void reportDailySales() {
     clearScreen();
     cout << "╔════════════════════════════════════════╗\n";
-    cout << "║         รายงานยอดขายรายวัน            ║\n";
+    cout << "║         DAILY SALES REPORT             ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
     string date;
     cin.ignore();
-    cout << "วันที่ (dd/mm/yyyy): ";
+    cout << "Date (dd/mm/yyyy, type 0 to cancel): ";
     getline(cin, date);
     
+    if (date == "0" || date == "cancel") {
+        return;
+    }
+    
     cout << "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << left << setw(12) << "เวลา" << setw(12) << "รหัส" << setw(20) << "สินค้า" 
-         << setw(8) << "จำนวน" << setw(12) << "ยอดรวม" << "พนักงาน\n";
+    cout << left << setw(12) << "Time" << setw(12) << "ID" << setw(20) << "Product" 
+         << setw(8) << "Qty" << setw(12) << "Total" << "Cashier\n";
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     double totalSales = 0;
@@ -621,10 +641,10 @@ void reportDailySales() {
     }
     
     if (!found) {
-        cout << "ไม่มีรายการขายในวันที่ระบุ\n";
+        cout << "No sales for specified date\n";
     } else {
         cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-        cout << "ยอดขายรวมวันนี้: " << fixed << setprecision(2) << totalSales << " บาท\n";
+        cout << "Daily Total Sales: " << fixed << setprecision(2) << totalSales << " $\n";
     }
     
     pause();
@@ -633,17 +653,21 @@ void reportDailySales() {
 void reportMonthlySales() {
     clearScreen();
     cout << "╔════════════════════════════════════════╗\n";
-    cout << "║        รายงานยอดขายรายเดือน           ║\n";
+    cout << "║        MONTHLY SALES REPORT            ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
     string month;
     cin.ignore();
-    cout << "เดือน/ปี (mm/yyyy): ";
+    cout << "Month/Year (mm/yyyy, type 0 to cancel): ";
     getline(cin, month);
     
+    if (month == "0" || month == "cancel") {
+        return;
+    }
+    
     cout << "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << left << setw(12) << "วันที่" << setw(12) << "เวลา" << setw(20) << "สินค้า" 
-         << setw(8) << "จำนวน" << setw(12) << "ยอดรวม" << "พนักงาน\n";
+    cout << left << setw(12) << "Date" << setw(12) << "Time" << setw(20) << "Product" 
+         << setw(8) << "Qty" << setw(12) << "Total" << "Cashier\n";
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     double totalSales = 0;
@@ -661,10 +685,10 @@ void reportMonthlySales() {
     }
     
     if (!found) {
-        cout << "ไม่มีรายการขายในเดือนที่ระบุ\n";
+        cout << "No sales for specified month\n";
     } else {
         cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-        cout << "ยอดขายรวมเดือนนี้: " << fixed << setprecision(2) << totalSales << " บาท\n";
+        cout << "Monthly Total Sales: " << fixed << setprecision(2) << totalSales << " $\n";
     }
     
     pause();
@@ -673,7 +697,7 @@ void reportMonthlySales() {
 void reportTotalSales() {
     clearScreen();
     cout << "╔════════════════════════════════════════╗\n";
-    cout << "║        ยอดขายรวมทั้งหมด               ║\n";
+    cout << "║          TOTAL SALES REPORT            ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
     double totalSales = 0;
@@ -685,36 +709,41 @@ void reportTotalSales() {
     }
     
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << "จำนวนรายการขายทั้งหมด: " << totalTransactions << " รายการ\n";
-    cout << "ยอดขายรวมทั้งหมด: " << fixed << setprecision(2) << totalSales << " บาท\n";
+    cout << "Total Transactions: " << totalTransactions << " sales\n";
+    cout << "Total Sales Amount: " << fixed << setprecision(2) << totalSales << " $\n";
     cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     pause();
 }
 
-// ===== ระบบค้นหาข้อมูลอย่างละเอียด =====
+// ===== Advanced Search System =====
 
 void advancedSearch() {
     clearScreen();
     cout << "╔════════════════════════════════════════╗\n";
-    cout << "║      ค้นหาข้อมูลอย่างละเอียด           ║\n";
+    cout << "║          ADVANCED SEARCH               ║\n";
     cout << "╚════════════════════════════════════════╝\n\n";
     
-    cout << "1. ค้นหาตามชื่อสินค้า\n";
-    cout << "2. ค้นหาตามหมวดหมู่\n";
-    cout << "3. ค้นหาตามช่วงราคา\n";
-    cout << "4. ค้นหาสินค้าใกล้หมด\n";
-    cout << "\nเลือกประเภทการค้นหา: ";
+    cout << "1. Search by Product Name\n";
+    cout << "2. Search by Category\n";
+    cout << "3. Search by Price Range\n";
+    cout << "4. Search Low Stock Products\n";
+    cout << "0. Cancel\n";
+    cout << "\nSelect search type: ";
     
     int choice;
     cin >> choice;
     cin.ignore();
     
+    if (choice == 0) {
+        return;
+    }
+    
     vector<Product> results;
     
     if (choice == 1) {
         string name;
-        cout << "ชื่อสินค้า: ";
+        cout << "Product Name: ";
         getline(cin, name);
         
         for (const auto& p : products) {
@@ -725,7 +754,7 @@ void advancedSearch() {
     }
     else if (choice == 2) {
         string category;
-        cout << "หมวดหมู่: ";
+        cout << "Category: ";
         getline(cin, category);
         
         for (const auto& p : products) {
@@ -736,9 +765,9 @@ void advancedSearch() {
     }
     else if (choice == 3) {
         double minPrice, maxPrice;
-        cout << "ราคาต่ำสุด: ";
+        cout << "Minimum Price: ";
         cin >> minPrice;
-        cout << "ราคาสูงสุด: ";
+        cout << "Maximum Price: ";
         cin >> maxPrice;
         
         for (const auto& p : products) {
@@ -755,26 +784,26 @@ void advancedSearch() {
         }
     }
     else {
-        cout << "\n❌ ตัวเลือกไม่ถูกต้อง!\n";
+        cout << "\n❌ Invalid option!\n";
         pause();
         return;
     }
     
-    cout << "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
-    cout << "ผลการค้นหา: " << results.size() << " รายการ\n";
-    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    cout << "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+    cout << "Search Results: " << results.size() << " items\n";
+    cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
     
     if (results.empty()) {
-        cout << "ไม่พบสินค้าที่ตรงกับเงื่อนไข\n";
+        cout << "No products match the criteria\n";
     } else {
-        cout << left << setw(10) << "รหัส" << setw(20) << "ชื่อสินค้า" 
-             << setw(15) << "หมวดหมู่" << setw(10) << "ราคา" << "สต็อก\n";
-        cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+        cout << left << setw(12) << "ID" << setw(25) << "Product Name" 
+             << setw(18) << "Category" << right << setw(12) << "Price" << setw(10) << "Stock" << "\n";
+        cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
         
         for (const auto& p : results) {
-            cout << left << setw(10) << p.id << setw(20) << p.name 
-                 << setw(15) << p.category << setw(10) << fixed << setprecision(2) 
-                 << p.price << p.stock;
+            cout << left << setw(12) << p.id << setw(25) << p.name 
+                 << setw(18) << p.category << right << setw(12) << fixed << setprecision(2) 
+                 << p.price << setw(10) << p.stock;
             
             if (p.stock <= p.minStock) {
                 cout << " ⚠️ ";
@@ -786,38 +815,38 @@ void advancedSearch() {
     pause();
 }
 
-// ===== เมนูสำหรับ Admin =====
+// ===== Admin Menu =====
 
 void adminMenu() {
     while (true) {
         clearScreen();
         cout << "╔════════════════════════════════════════╗\n";
-        cout << "║          เมนู ADMIN                    ║\n";
-        cout << "║  ผู้ใช้: " << left << setw(28) << currentUser.username << "║\n";
+        cout << "║            ADMIN MENU                  ║\n";
+        cout << "║  User: " << left << setw(28) << currentUser.username << "║\n";
         cout << "╚════════════════════════════════════════╝\n\n";
         
-        cout << "【 จัดการสินค้า 】\n";
-        cout << "  1. เพิ่มสินค้าใหม่\n";
-        cout << "  2. แก้ไขข้อมูลสินค้า\n";
-        cout << "  3. ลบสินค้า\n";
-        cout << "  4. ค้นหาสินค้า\n";
-        cout << "  5. แสดงสินค้าทั้งหมด\n\n";
+        cout << "【 Product Management 】\n";
+        cout << "  1. Add New Product\n";
+        cout << "  2. Edit Product\n";
+        cout << "  3. Delete Product\n";
+        cout << "  4. Search Product\n";
+        cout << "  5. Show All Products\n\n";
         
-        cout << "【 ขายสินค้า 】\n";
-        cout << "  6. ขายสินค้า\n\n";
+        cout << "【 Sales 】\n";
+        cout << "  6. Sell Product\n\n";
         
-        cout << "【 รายงาน 】\n";
-        cout << "  7. รายงานสินค้าคงเหลือ\n";
-        cout << "  8. รายงานสินค้าใกล้หมด\n";
-        cout << "  9. รายงานยอดขายรายวัน\n";
-        cout << "  10. รายงานยอดขายรายเดือน\n";
-        cout << "  11. ยอดขายรวมทั้งหมด\n\n";
+        cout << "【 Reports 】\n";
+        cout << "  7. Stock Remaining Report\n";
+        cout << "  8. Low Stock Report\n";
+        cout << "  9. Daily Sales Report\n";
+        cout << "  10. Monthly Sales Report\n";
+        cout << "  11. Total Sales Report\n\n";
         
-        cout << "【 ค้นหาข้อมูล 】\n";
-        cout << "  12. ค้นหาข้อมูลอย่างละเอียด\n\n";
+        cout << "【 Search 】\n";
+        cout << "  12. Advanced Search\n\n";
         
-        cout << "  0. ออกจากระบบ\n\n";
-        cout << "เลือกเมนู: ";
+        cout << "  0. Logout\n\n";
+        cout << "Select menu: ";
         
         int choice;
         cin >> choice;
@@ -837,39 +866,39 @@ void adminMenu() {
             case 12: advancedSearch(); break;
             case 0: return;
             default:
-                cout << "\n❌ ตัวเลือกไม่ถูกต้อง!\n";
+                cout << "\n❌ Invalid option!\n";
                 pause();
         }
     }
 }
 
-// ===== เมนูสำหรับ Cashier =====
+// ===== Cashier Menu =====
 
 void cashierMenu() {
     while (true) {
         clearScreen();
         cout << "╔════════════════════════════════════════╗\n";
-        cout << "║          เมนู CASHIER                  ║\n";
-        cout << "║  ผู้ใช้: " << left << setw(28) << currentUser.username << "║\n";
+        cout << "║           CASHIER MENU                 ║\n";
+        cout << "║  User: " << left << setw(28) << currentUser.username << "║\n";
         cout << "╚════════════════════════════════════════╝\n\n";
         
-        cout << "【 ขายสินค้า 】\n";
-        cout << "  1. ขายสินค้า\n";
-        cout << "  2. แสดงสินค้าทั้งหมด\n";
-        cout << "  3. ค้นหาสินค้า\n\n";
+        cout << "【 Sales 】\n";
+        cout << "  1. Sell Product\n";
+        cout << "  2. Show All Products\n";
+        cout << "  3. Search Product\n\n";
         
-        cout << "【 รายงาน 】\n";
-        cout << "  4. รายงานสินค้าคงเหลือ\n";
-        cout << "  5. รายงานสินค้าใกล้หมด\n";
-        cout << "  6. รายงานยอดขายรายวัน\n";
-        cout << "  7. รายงานยอดขายรายเดือน\n";
-        cout << "  8. ยอดขายรวมทั้งหมด\n\n";
+        cout << "【 Reports 】\n";
+        cout << "  4. Stock Remaining Report\n";
+        cout << "  5. Low Stock Report\n";
+        cout << "  6. Daily Sales Report\n";
+        cout << "  7. Monthly Sales Report\n";
+        cout << "  8. Total Sales Report\n\n";
         
-        cout << "【 ค้นหาข้อมูล 】\n";
-        cout << "  9. ค้นหาข้อมูลอย่างละเอียด\n\n";
+        cout << "【 Search 】\n";
+        cout << "  9. Advanced Search\n\n";
         
-        cout << "  0. ออกจากระบบ\n\n";
-        cout << "เลือกเมนู: ";
+        cout << "  0. Logout\n\n";
+        cout << "Select menu: ";
         
         int choice;
         cin >> choice;
@@ -886,36 +915,36 @@ void cashierMenu() {
             case 9: advancedSearch(); break;
             case 0: return;
             default:
-                cout << "\n❌ ตัวเลือกไม่ถูกต้อง!\n";
+                cout << "\n❌ Invalid option!\n";
                 pause();
         }
     }
 }
 
-// ===== ฟังก์ชันหลัก =====
+// ===== Main Function =====
 
 int main() {
-    // โหลดข้อมูลทั้งหมด
+    // Load all data
     loadUsers();
     loadProducts();
     loadSales();
     
-    // ล็อกอิน
+    // Login
     while (true) {
         if (login()) {
             clearScreen();
-            cout << "\n✓ เข้าสู่ระบบสำเร็จ!\n";
-            cout << "ยินดีต้อนรับ " << currentUser.username << " (" << currentUser.role << ")\n";
+            cout << "\n✓ Login successful!\n";
+            cout << "Welcome " << currentUser.username << " (" << currentUser.role << ")\n";
             pause();
             
-            // เข้าเมนูตามสิทธิ์
+            // Enter menu based on role
             if (currentUser.role == "Admin") {
                 adminMenu();
             } else if (currentUser.role == "Cashier") {
                 cashierMenu();
             }
             
-            cout << "\nออกจากระบบแล้ว\n";
+            cout << "\nLogged out successfully\n";
             pause();
         }
     }
