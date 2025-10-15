@@ -5,3 +5,4 @@
 08/10/2025|16:18:59|P005|Shampoo Sunsilk 200ml|1|65.00|cashier
 08/10/2025|17:25:33|P004|Oreo Cookies 133g|2|60.00|cashier
 09/10/2025|21:02:27|P008|Pen Blue Pilot|22|220.00|admin
+15/10/2025|18:31:05|P001|Coca-Cola 1.5L|2|50.00|admin
