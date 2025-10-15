@@ -5,6 +5,6 @@ P004|Oreo Cookies 133g|Snack|30.00|20|5
 P005|Shampoo Sunsilk 200ml|Personal Care|65.00|3|5
 P006|Soap Dove 100g|Personal Care|40.00|12|5
 P007|Notebook A4 80 pages|Stationery|18.00|2|5
-P008|Pen Blue Pilot|Stationery|10.00|25|10
+P008|Pen Blue Pilot|Stationery|10.00|3|10
 P009|Milk Dutch Mill 180ml|Beverage|12.00|0|5
 P010|Instant Noodles Mama 60g|Food|7.00|100|20
