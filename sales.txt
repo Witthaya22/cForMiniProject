@@ -1,1 +1,6 @@
-07/10/2025|23:05:51|001|หหมมา|4|60|admin
+09/10/2025|10:15:22|P001|Coca-Cola 1.5L|2|50.00|cashier
+09/10/2025|11:20:10|P003|Lay's Classic 50g|3|45.00|cashier
+09/10/2025|13:05:45|P002|Pepsi 1.5L|1|24.00|cashier
+09/10/2025|15:42:12|P010|Instant Noodles Mama 60g|5|35.00|cashier
+08/10/2025|16:18:59|P005|Shampoo Sunsilk 200ml|1|65.00|cashier
+08/10/2025|17:25:33|P004|Oreo Cookies 133g|2|60.00|cashier
